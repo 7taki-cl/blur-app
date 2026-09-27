@@ -401,9 +401,13 @@ input[type="file"]::file-selector-button:hover {
     padding: 16px 12px;
   }
 
-  /* プレビューと設定パネルを横並びではなく、上下に積む */
+  /* プレビューと設定パネルを横並びではなく、上下に積む。
+     あわせて align-items を stretch にし、プレビュー画像の枠(#canvas-column)の幅を
+     画面の幅にきちんと固定する。これがないと、拡大したときに枠自体が画面の外まで
+     際限なく広がってしまい、枠の中でのスクロール(パン)が正しく働かなくなる。 */
   #workspace {
     flex-direction: column;
+    align-items: stretch;
   }
 
   #region-panel {
