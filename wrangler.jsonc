@@ -1,0 +1,10 @@
+{
+  // Cloudflareに「どのフォルダを公開すればよいか」を伝えるための設定ファイル。
+  // このアプリはサーバー側の処理を持たない(静的なHTML/CSS/JSだけの)アプリなので、
+  // assets.directory に public フォルダを指定するだけで公開できる。
+  "name": "blur-app",
+  "compatibility_date": "2026-09-27",
+  "assets": {
+    "directory": "./public"
+  }
+}
