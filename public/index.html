@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <!-- スマホで正しい縮尺(実際の画面幅)で表示するために必要 -->
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>画像ぼかしアプリ</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app-shell">
+    <h1>画像ぼかしアプリ</h1>
+
+    <div id="toolbar" class="card">
+      <input type="file" id="file-input" accept="image/jpeg,image/png">
+
+      <!-- ドラッグで作る範囲の形を選ぶ(初期値は楕円)。
+           見た目はボタンだが、中身はラジオボタンのままなのでJS側の変更は不要 -->
+      <div class="shape-select" role="group" aria-label="範囲の形">
+        <input type="radio" id="shape-ellipse" name="shape" value="ellipse" checked>
+        <label for="shape-ellipse" class="shape-btn"><span class="shape-icon" aria-hidden="true">⬭</span>楕円</label>
+
+        <input type="radio" id="shape-rect" name="shape" value="rect">
+        <label for="shape-rect" class="shape-btn"><span class="shape-icon" aria-hidden="true">▭</span>矩形</label>
+      </div>
+    </div>
+
+    <p class="hint">画像ファイルは、この画面のどこにドラッグ&ドロップしても読み込めます。</p>
+
+    <p id="message" class="status-text"></p>
+    <p class="hint">
+      操作方法: 何もない場所をドラッグ→範囲を作成 / 範囲の内側をドラッグ→移動 /
+      選択中の範囲の四隅・辺の四角(ハンドル)をドラッグ→リサイズ / 選択中にDeleteキーまたは削除ボタン→削除
+    </p>
+
+    <div id="workspace">
+      <div id="canvas-column">
+        <!-- 拡大・縮小と、画像を動かす(パン)モードの切り替え。画像を読み込むまでは操作できない -->
+        <div id="zoom-bar" class="card">
+          <button type="button" id="zoom-out-button" disabled aria-label="縮小">－</button>
+          <span id="zoom-level-text">100%</span>
+          <button type="button" id="zoom-in-button" disabled aria-label="拡大">＋</button>
+          <button type="button" id="zoom-reset-button" disabled>リセット</button>
+          <button type="button" id="pan-toggle-button" disabled>画像を動かす</button>
+        </div>
+
+        <div id="canvas-wrap" class="card">
+          <canvas id="preview-canvas"></canvas>
+        </div>
+      </div>
+
+      <!-- 範囲を選択しているときだけ中身が見える、加工の設定パネル。
+           範囲が選択されていない間も幅(場所)はずっと確保しておく。
+           (選択のたびにこのパネルが表示/非表示されると、隣のプレビュー画像の表示サイズが
+            そのぶん変わってガタつくため、場所だけは常に確保し、見た目だけ隠す) -->
+      <div id="region-panel" class="card is-empty">
+        <h2>選択中の範囲の設定</h2>
+
+        <label class="panel-row">
+          加工の種類
+          <select id="effect-select">
+            <option value="blur">ぼかし(ガウスぼかし)</option>
+            <option value="mosaic">モザイク</option>
+            <option value="fill">塗りつぶし</option>
+          </select>
+        </label>
+
+        <label class="panel-row">
+          強さ
+          <input type="range" id="strength-range" min="1" max="200" step="1">
+          <span id="strength-value" class="panel-value"></span>
+        </label>
+
+        <label class="panel-row" id="feather-row">
+          フェザー(縁のなじませ)
+          <input type="range" id="feather-range" min="0" max="150" step="1">
+          <span id="feather-value" class="panel-value"></span>
+        </label>
+
+        <label class="panel-row" id="color-row">
+          塗りつぶしの色
+          <input type="color" id="color-input" value="#000000">
+        </label>
+
+        <!-- キーボードのないスマホ・タブレットでも削除できるようにするボタン(Deleteキーと同じ動作) -->
+        <button type="button" id="delete-region-button" class="danger-button">この範囲を削除</button>
+      </div>
+    </div>
+
+    <div id="export-bar" class="card">
+      <button id="save-button" disabled>画像を保存(ダウンロード)</button>
+
+      <!-- JPEGを開いているときだけ表示される画質スライダー -->
+      <label id="quality-row" class="panel-row" hidden>
+        JPEGの画質
+        <input type="range" id="quality-range" min="0.5" max="1" step="0.01" value="0.92">
+        <span id="quality-value" class="panel-value">0.92</span>
+      </label>
+
+      <span id="save-status" class="hint"></span>
+    </div>
+  </div>
+
+  <!-- 読み込み順が重要(defer属性により、この順番のままDOM構築後に実行される) -->
+  <script src="js/image-loader.js" defer></script>
+  <script src="js/region-store.js" defer></script>
+  <script src="js/effects.js" defer></script>
+  <script src="js/canvas-view.js" defer></script>
+  <script src="js/exporter.js" defer></script>
+  <script src="js/main.js" defer></script>
+</body>
+</html>

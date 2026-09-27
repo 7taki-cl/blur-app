@@ -1,0 +1,433 @@
+/* 全体の見た目。シンプル・モダンな配色でまとめる。 */
+
+:root {
+  --color-bg: #f4f5f7;
+  --color-surface: #ffffff;
+  --color-border: #e2e4e9;
+  --color-text: #1f2328;
+  --color-text-muted: #6b7280;
+  --color-accent: #2f6fed;
+  --color-accent-hover: #2557c7;
+  --color-accent-soft: #eaf1ff;
+  --color-selected: #ffb020;
+  --radius: 10px;
+  --shadow: 0 1px 2px rgba(16, 24, 40, 0.04), 0 1px 3px rgba(16, 24, 40, 0.06);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: -apple-system, "Segoe UI", system-ui, "Hiragino Kaku Gothic ProN", sans-serif;
+  margin: 0;
+  padding: 32px 24px;
+  color: var(--color-text);
+  background: var(--color-bg);
+}
+
+/* 画像ファイルをドラッグしている間、画面全体にドロップ可能なことを示す */
+body.drag-over {
+  outline: 3px dashed var(--color-accent);
+  outline-offset: -3px;
+  background: var(--color-accent-soft);
+}
+
+.app-shell {
+  max-width: 1160px;
+  margin: 0 auto;
+}
+
+h1 {
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0 0 20px;
+  color: var(--color-text);
+}
+
+/* カード共通スタイル(白背景・角丸・薄い影) */
+.card {
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+
+#toolbar {
+  margin-bottom: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+/* ブラウザ標準のファイル選択ボタン部分だけを、他のボタンと馴染むように再デザインする */
+input[type="file"] {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+input[type="file"]::file-selector-button {
+  font: inherit;
+  font-weight: 600;
+  padding: 8px 14px;
+  margin-right: 10px;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  background: var(--color-surface);
+  color: var(--color-text);
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+input[type="file"]::file-selector-button:hover {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
+/* 楕円/矩形の切り替え(見た目はボタン、中身はラジオボタン) */
+.shape-select {
+  display: inline-flex;
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.shape-select input[type="radio"] {
+  /* 画面には映さないが、キーボード操作やスクリーンリーダーのためにDOM上には残す */
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+}
+
+.shape-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 9px 18px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  background: var(--color-surface);
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.15s ease, color 0.15s ease;
+}
+
+/* 2つ目以降のボタンの間に区切り線を入れる */
+.shape-btn:not(:first-of-type) {
+  border-left: 1px solid var(--color-border);
+}
+
+.shape-icon {
+  font-size: 15px;
+  line-height: 1;
+}
+
+.shape-select input[type="radio"]:checked + .shape-btn {
+  background: var(--color-accent);
+  color: #fff;
+}
+
+.shape-select input[type="radio"]:focus-visible + .shape-btn {
+  outline: 2px solid var(--color-accent);
+  outline-offset: -2px;
+}
+
+.shape-btn:hover {
+  background: var(--color-accent-soft);
+}
+
+.shape-select input[type="radio"]:checked + .shape-btn:hover {
+  background: var(--color-accent-hover);
+}
+
+#message.status-text {
+  color: var(--color-text);
+  font-size: 13px;
+  min-height: 1.2em;
+  margin: 4px 0;
+}
+
+.hint {
+  color: var(--color-text-muted);
+  font-size: 12px;
+  margin: 4px 0;
+}
+
+/* プレビューと設定パネルを横に並べる */
+#workspace {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 16px;
+}
+
+/* ズーム操作バーとプレビューをまとめて縦に並べる、workspace内の左側の列 */
+#canvas-column {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  min-width: 0;
+}
+
+#zoom-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  flex-wrap: wrap;
+}
+
+#zoom-bar button {
+  padding: 6px 12px;
+  font: inherit;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
+}
+
+#zoom-bar button:hover:not(:disabled) {
+  background: var(--color-accent-soft);
+  border-color: var(--color-accent);
+}
+
+#zoom-bar button:disabled {
+  cursor: not-allowed;
+  color: var(--color-text-muted);
+  opacity: 0.6;
+}
+
+/* 「画像を動かす」ボタンが今の操作モードを表す(押されている状態=パンモード中) */
+#zoom-bar button.is-active {
+  background: var(--color-accent);
+  color: #fff;
+  border-color: var(--color-accent);
+}
+
+#zoom-level-text {
+  font-size: 13px;
+  color: var(--color-text-muted);
+  min-width: 42px;
+  text-align: center;
+}
+
+/* プレビュー用キャンバスの表示枠。
+   画面に収まるよう最大サイズを制限し、はみ出す場合は縮小表示する。
+   ズームで画像がこの枠より大きくなったときは、枠の中でスクロールして見る(パンする)。
+   (canvas自体の実ピクセル数はJS側でセットする値のまま。CSSで見た目のサイズだけを変える) */
+#canvas-wrap {
+  padding: 4px;
+  max-width: 100%;
+  max-height: 80vh;
+  overflow: auto;
+  min-width: 0;
+  line-height: 0;
+}
+
+#region-panel {
+  width: 260px;
+  flex-shrink: 0;
+  padding: 16px;
+  box-sizing: border-box;
+}
+
+/* 範囲が選択されていないときは中身を見えなくするだけで、幅・高さは確保したままにする。
+   (display:noneやhidden属性を使うと、その分プレビュー画像の表示サイズが変わってガタつくため) */
+#region-panel.is-empty {
+  visibility: hidden;
+}
+
+#region-panel h2 {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+  margin: 0 0 14px;
+}
+
+.panel-row {
+  display: block;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--color-text);
+  margin-bottom: 16px;
+}
+
+.panel-row select {
+  display: block;
+  width: 100%;
+  margin-top: 6px;
+  padding: 7px 8px;
+  font: inherit;
+  font-weight: 400;
+  color: var(--color-text);
+  background: var(--color-surface);
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+}
+
+.panel-row input[type="range"] {
+  display: block;
+  width: 100%;
+  margin-top: 8px;
+  accent-color: var(--color-accent);
+}
+
+.panel-row input[type="color"] {
+  display: block;
+  margin-top: 8px;
+  width: 48px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid var(--color-border);
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.panel-value {
+  display: inline-block;
+  margin-top: 4px;
+  color: var(--color-text-muted);
+  font-size: 12px;
+  font-weight: 400;
+}
+
+/* 選択中の範囲を削除するボタン(Deleteキーと同じ動作。物理キーボードがないスマホ向け) */
+.danger-button {
+  display: block;
+  width: 100%;
+  margin-top: 4px;
+  padding: 10px 12px;
+  font: inherit;
+  font-weight: 600;
+  color: #c22b2b;
+  background: #fdecec;
+  border: 1px solid #f3c6c6;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+.danger-button:hover {
+  background: #f9d5d5;
+}
+
+#preview-canvas {
+  display: block;
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 6px;
+  /* ドラッグ中にカーソルが矢印のままだと操作しづらいので、範囲選択用に変える */
+  cursor: crosshair;
+  /* Pointer Eventsでのドラッグを、ブラウザ標準のスクロール操作と競合させない
+     (画像を動かす操作もJS側でscrollLeft/scrollTopを書き換えて行うため、ここは常にnoneのままでよい) */
+  touch-action: none;
+}
+
+/* 「画像を動かす」モード中のカーソル(つかんで動かせることを示す) */
+#preview-canvas.pan-mode {
+  cursor: grab;
+}
+
+#preview-canvas.pan-mode.is-panning {
+  cursor: grabbing;
+}
+
+#export-bar {
+  margin-top: 16px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
+#export-bar button {
+  padding: 10px 20px;
+  font: inherit;
+  font-weight: 700;
+  color: #fff;
+  background: var(--color-accent);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+}
+
+#export-bar button:hover:not(:disabled) {
+  background: var(--color-accent-hover);
+}
+
+#export-bar button:disabled {
+  cursor: not-allowed;
+  background: var(--color-border);
+  color: var(--color-text-muted);
+}
+
+#quality-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 0;
+}
+
+#quality-row input[type="range"] {
+  width: 140px;
+  margin-top: 0;
+  accent-color: var(--color-accent);
+}
+
+#save-status {
+  margin: 0;
+}
+
+/* 画面が狭いとき(タブレット・スマホ幅)向けのレイアウト調整。
+   処理する画像の解像度には影響しない、見た目だけの調整。 */
+@media (max-width: 900px) {
+  body {
+    padding: 16px 12px;
+  }
+
+  /* プレビューと設定パネルを横並びではなく、上下に積む */
+  #workspace {
+    flex-direction: column;
+  }
+
+  #region-panel {
+    width: 100%;
+  }
+
+  #quality-row input[type="range"] {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  /* 指でも押しやすいよう、ボタン類を一回り大きくする(タップ領域の目安44px以上) */
+  .shape-btn,
+  input[type="file"]::file-selector-button,
+  #export-bar button,
+  .danger-button,
+  #zoom-bar button {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    font-size: 15px;
+  }
+
+  .panel-row input[type="color"] {
+    width: 56px;
+    height: 40px;
+  }
+}
