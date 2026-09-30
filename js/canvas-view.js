@@ -307,6 +307,7 @@ window.App = window.App || {};
           scrollLeft: canvasWrap.scrollLeft,
           scrollTop: canvasWrap.scrollTop,
         };
+        canvas.style.cursor = ''; // 直前のカーソル指定を消し、CSSの grabbing(つかんでいる手)を効かせる
         canvas.classList.add('is-panning');
         return;
       }
@@ -389,6 +390,13 @@ window.App = window.App || {};
         const box = computeResizedBox(originalBox, activeHandle, dx, dy, state.fullWidth, state.fullHeight);
         window.App.regionStore.updateRegion(activeId, box);
         redraw();
+        return;
+      }
+
+      // 「画像を動かす」モード中は、範囲用のカーソル(十字・移動など)に書き換えない。
+      // 直接指定したカーソルはCSSより優先されてしまうため、指定を消してCSSの手のひら(grab)に任せる
+      if (getPanMode()) {
+        canvas.style.cursor = '';
         return;
       }
 
